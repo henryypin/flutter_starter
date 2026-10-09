@@ -1,30 +1,50 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter_starter/app/di/injector.dart';
+import 'package:flutter_starter/app/router/app_router.dart';
+import 'package:flutter_starter/core/feedback/app_feedback.dart';
+import 'package:flutter_starter/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:flutter_starter/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:flutter_starter/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_starter/main.dart';
+import 'support/test_dependencies.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  setUp(() async {
+    await configureTestDependencies();
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  tearDown(() async {
+    await getIt.reset();
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('failed login shows Invalid email or password', (
+    WidgetTester tester,
+  ) async {
+    final authCubit = getIt<AuthCubit>();
+    final settingsCubit = getIt<SettingsCubit>();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    final router = createAppRouter(
+      isAuthenticated: () => authCubit.stateValue.isAuthenticated,
+      authCubit: authCubit,
+      settingsCubit: settingsCubit,
+      createProfileCubit: () => getIt<ProfileCubit>(),
+      feedback: getIt<AppFeedback>(),
+    );
+
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Email'),
+      'someone@example.com',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Password'),
+      'wrong-password',
+    );
+    await tester.tap(find.widgetWithText(FilledButton, 'Sign in'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Invalid email or password'), findsOneWidget);
   });
 }

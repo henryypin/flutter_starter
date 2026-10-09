@@ -5,6 +5,7 @@ import 'package:flutter_starter/core/feedback/app_feedback.dart';
 import 'package:flutter_starter/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter_starter/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_starter/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:flutter_starter/features/todos/presentation/cubit/todos_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/test_dependencies.dart';
@@ -29,6 +30,7 @@ void main() {
       authCubit: authCubit,
       settingsCubit: settingsCubit,
       createProfileCubit: () => getIt<ProfileCubit>(),
+      createTodosCubit: () => getIt<TodosCubit>(),
       feedback: getIt<AppFeedback>(),
     );
 

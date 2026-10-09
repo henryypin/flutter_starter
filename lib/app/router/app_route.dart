@@ -24,3 +24,8 @@ final class Settings extends AppRoute {
 final class Profile extends AppRoute {
   const Profile();
 }
+
+/// Todos screen backed by the local database.
+final class Todos extends AppRoute {
+  const Todos();
+}

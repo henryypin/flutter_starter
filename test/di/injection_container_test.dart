@@ -3,6 +3,7 @@ import 'package:flutter_starter/app/config/app_config.dart';
 import 'package:flutter_starter/app/di/injector.dart';
 import 'package:flutter_starter/core/error/failure_message_resolver.dart';
 import 'package:flutter_starter/core/error/result.dart';
+import 'package:flutter_starter/core/database/app_database.dart';
 import 'package:flutter_starter/core/feedback/app_feedback.dart';
 import 'package:flutter_starter/core/logging/app_logger.dart';
 import 'package:flutter_starter/core/network/api_client.dart';
@@ -21,6 +22,8 @@ import 'package:flutter_starter/features/profile/domain/repositories/profile_rep
 import 'package:flutter_starter/features/profile/domain/usecases/load_profile.dart';
 import 'package:flutter_starter/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_starter/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:flutter_starter/features/todos/domain/repositories/todo_repository.dart';
+import 'package:flutter_starter/features/todos/presentation/cubit/todos_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../support/test_dependencies.dart';
@@ -53,6 +56,9 @@ void main() {
     expect(getIt.isRegistered<LoadProfile>(), isTrue);
     expect(getIt.isRegistered<ProfileCubit>(), isTrue);
     expect(getIt.isRegistered<SettingsCubit>(), isTrue);
+    expect(getIt.isRegistered<AppDatabase>(), isTrue);
+    expect(getIt.isRegistered<TodoRepository>(), isTrue);
+    expect(getIt.isRegistered<TodosCubit>(), isTrue);
   });
 
   test('AuthCubit and SettingsCubit are singletons', () {
@@ -63,6 +69,15 @@ void main() {
   test('ProfileCubit is a factory', () {
     final first = getIt<ProfileCubit>();
     final second = getIt<ProfileCubit>();
+    addTearDown(first.close);
+    addTearDown(second.close);
+
+    expect(identical(first, second), isFalse);
+  });
+
+  test('TodosCubit is a factory', () {
+    final first = getIt<TodosCubit>();
+    final second = getIt<TodosCubit>();
     addTearDown(first.close);
     addTearDown(second.close);
 

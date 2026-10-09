@@ -38,6 +38,11 @@ class HomePage extends StatelessWidget {
             onTap: () => context.router<AppRoute>().push(const Settings()),
           ),
           ListTile(
+            leading: const Icon(Icons.checklist),
+            title: const Text('Todos'),
+            onTap: () => context.router<AppRoute>().push(const Todos()),
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Sign out'),
             onTap: () => _signOut(context),

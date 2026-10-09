@@ -7,6 +7,8 @@ import 'package:flutter_starter/features/profile/presentation/cubit/profile_cubi
 import 'package:flutter_starter/features/profile/presentation/pages/profile_page.dart';
 import 'package:flutter_starter/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:flutter_starter/features/settings/presentation/pages/settings_page.dart';
+import 'package:flutter_starter/features/todos/presentation/cubit/todos_cubit.dart';
+import 'package:flutter_starter/features/todos/presentation/pages/todos_page.dart';
 import 'package:kaisel/kaisel.dart';
 
 /// Builds the app's [KaiselRouterConfig].
@@ -19,6 +21,7 @@ KaiselRouterConfig<AppRoute> createAppRouter({
   required AuthCubit authCubit,
   required SettingsCubit settingsCubit,
   required ProfileCubit Function() createProfileCubit,
+  required TodosCubit Function() createTodosCubit,
   required AppFeedback feedback,
 }) {
   final initial = isAuthenticated() ? const Home() : const Login();
@@ -31,6 +34,7 @@ KaiselRouterConfig<AppRoute> createAppRouter({
       Login() => LoginPage(authCubit: authCubit, feedback: feedback),
       Settings() => SettingsPage(settingsCubit: settingsCubit),
       Profile() => ProfilePage(createProfileCubit: createProfileCubit),
+      Todos() => TodosPage(createTodosCubit: createTodosCubit),
     },
   );
 }
